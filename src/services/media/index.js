@@ -1,0 +1,168 @@
+const express = require("express");
+const path = require("path");
+const uniqid = require("uniqid");
+const { readDB, writeDB } = require("../../lib/utilities");
+const { check, validationResult } = require("express-validator");
+const { Router } = require("express");
+const { read } = require("fs");
+const mediaFilePath = path.join(__dirname, "movies.json");
+
+const mediaRouter = express.Router();
+
+const mediaValidation = [
+  check("Title").exists().withMessage("Title is required!"),
+  check("imdbID").exists().withMessage("id is required!"),
+];
+
+const reviewsValidation = [
+  check("rate").exists().withMessage("Rate is required!"),
+  check("comment").exists().withMessage("Comment is required!"),
+];
+
+//GET media
+mediaRouter.get("/", async (req, res, next) => {
+  try {
+    const movies = await readDB(mediaFilePath);
+    console.log(req.query);
+    console.log(req.query.title);
+    if ((req.query && req.query.title) || req.query.year || req.query.type) {
+      const filteredMovies = movies.filter(
+        (movie) =>
+          (movie.hasOwnProperty("Title") &&
+            movie.Title.toLowerCase() === req.query.title.toLowerCase()) ||
+          movie.Year === req.query.year ||
+          movie.Type === req.query.type
+      );
+      res.send(filteredMovies);
+    } else {
+      res.send(movies);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+//GET media/:id
+mediaRouter.get("/:id", async (req, res, next) => {
+  try {
+    const movies = await readDB(mediaFilePath);
+    const selectedMovie = movies.filter(
+      (movie) => movie.imdbID === req.params.id
+    );
+    if (movies.length > 0) {
+      res.send(selectedMovie);
+    } else {
+      const err = new Error();
+      err.httpStatusCode = 404;
+      next(err);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST media
+/* test with:
+    "Title": "Avengers: Age of Ultron",
+    "Year": "2015",
+    "imdbID": "tt2395427",
+    "Type": "movie",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BMTM4OGJmNWMtOTM4Ni00NTE3LTg3MDItZmQxYjc4N2JhNmUxXkEyXkFqcGdeQXVyNTgzMDMzMTg@._V1_SX300.jpg"
+ */
+mediaRouter.post("/", mediaValidation, async (req, res, next) => {
+  try {
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()) {
+      const error = new Error();
+      error.httpStatusCode = 400;
+      error.message = validationErrors;
+      next(error);
+    } else {
+      const movies = await readDB(mediaFilePath);
+
+      movies.push({
+        ...req.body,
+        reviews: [],
+      });
+      await writeDB(mediaFilePath, movies);
+      res.status(201).send();
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+//PUT
+mediaRouter.put("/:id", async (req, res, next) => {
+  try {
+    const movies = await readDB(mediaFilePath);
+    const newMovies = movies.filter((movie) => movie.imdbID !== req.params.id);
+    const modifiedMovie = req.body;
+    modifiedMovie.imdbID = req.params.id;
+    if (error) {
+      let err = new Error();
+      err.message = error.details[0].message;
+      err.httpStatusCode = 400;
+      next(err);
+    } else {
+      newmovies.push(modifiedMovie);
+      await writeDB(mediaFilePath, newMovies);
+      res.status(200).send(modifiedMovie);
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+// DELETE media/:id
+mediaRouter.delete("/:id", async (req, res, next) => {
+  try {
+    const movies = await readDB(mediaFilePath);
+
+    const movieFound = movies.find((movie) => movie.imdbID === req.params.id);
+
+    if (movieFound) {
+      const filteredMovies = movies.filter(
+        (movie) => movie.imdbID !== req.params.id
+      );
+
+      await writeDB(mediaFilePath, filteredMovies);
+      res.status(204).send();
+    } else {
+      const error = new Error();
+      error.httpStatusCode = 404;
+      next(error);
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+//GET media/id/reviews
+mediaRouter.get("/:id/reviews", async (req, res, next) => {
+  try {
+    const movies = await readDB(mediaFilePath)
+
+    const movieFound = movies.find(
+      movie => movie.imdbID === req.params.id
+    )
+
+    if (movieFound) {
+      res.send(movieFound.reviews)
+    } else {
+      const error = new Error()
+      error.httpStatusCode = 404
+      next(error)
+    }
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+})
+
+
+module.exports = mediaRouter;
