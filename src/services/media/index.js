@@ -163,14 +163,26 @@ mediaRouter.get("/:id/reviews", async (req, res, next) => {
 });
 
 //GET media/id/reviews/id
-mediaRouter.get("/:id/reviews", async (req, res, next) => {
+mediaRouter.get("/:movieId/reviews/reviewId", async (req, res, next) => {
   try {
     const movies = await readDB(mediaFilePath);
 
-    const movieFound = movies.find((movie) => movie.imdbID === req.params.id);
+    const movieFound = movies.find(
+      (movie) => movie.imdbID === req.params.movieId
+    );
 
     if (movieFound) {
-      res.send(movieFound.reviews);
+      const reviews = movieFound.reviews;
+      const reviewFound = reviews.find(
+        (rev) => rev._id === req.params.reviewId
+      );
+      if (reviewFound) {
+        res.send(reviewFound);
+      } else {
+        const error = new Error();
+        error.httpStatusCode = 404;
+        next(error);
+      }
     } else {
       const error = new Error();
       error.httpStatusCode = 404;
