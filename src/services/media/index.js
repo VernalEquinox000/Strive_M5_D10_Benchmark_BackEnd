@@ -145,24 +145,41 @@ mediaRouter.delete("/:id", async (req, res, next) => {
 //GET media/id/reviews
 mediaRouter.get("/:id/reviews", async (req, res, next) => {
   try {
-    const movies = await readDB(mediaFilePath)
+    const movies = await readDB(mediaFilePath);
 
-    const movieFound = movies.find(
-      movie => movie.imdbID === req.params.id
-    )
+    const movieFound = movies.find((movie) => movie.imdbID === req.params.id);
 
     if (movieFound) {
-      res.send(movieFound.reviews)
+      res.send(movieFound.reviews);
     } else {
-      const error = new Error()
-      error.httpStatusCode = 404
-      next(error)
+      const error = new Error();
+      error.httpStatusCode = 404;
+      next(error);
     }
   } catch (error) {
-    console.log(error)
-    next(error)
+    console.log(error);
+    next(error);
   }
-})
+});
 
+//GET media/id/reviews/id
+mediaRouter.get("/:id/reviews", async (req, res, next) => {
+  try {
+    const movies = await readDB(mediaFilePath);
+
+    const movieFound = movies.find((movie) => movie.imdbID === req.params.id);
+
+    if (movieFound) {
+      res.send(movieFound.reviews);
+    } else {
+      const error = new Error();
+      error.httpStatusCode = 404;
+      next(error);
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
 
 module.exports = mediaRouter;
