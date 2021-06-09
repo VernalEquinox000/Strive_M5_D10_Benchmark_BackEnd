@@ -5,13 +5,22 @@
     "imdbID": "tt0120737",
     "Type": "movie",
     "Poster": "https://m.media-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_SX300.jpg",
-    "reviews": {
-      "_id": "123455",
-      "comment": "A good movie but definitely I don't like many parts of the plot",
-      "rate": 3,
-      "elementId": "5d318e1a8541744830bef139",
-      "createdAt": "2019-08-01T12:46:45.895Z"
-    }
+    "reviews": [
+      {
+        "_id": "123455",
+        "comment": "A good movie but definitely I don't like many parts of the plot",
+        "rate": 3,
+        "elementId": "5d318e1a8541744830bef139",
+        "createdAt": "2019-08-01T12:46:45.895Z"
+      },
+      {
+        "_id": "123456",
+        "comment": "shit movie",
+        "rate": 1,
+        "elementId": "5d318e1a8541744830bef139",
+        "createdAt": "2019-08-01T12:46:45.895Z"
+      }
+    ]
   },
   {
     "Title": "The Lord of the Rings: The Return of the King",

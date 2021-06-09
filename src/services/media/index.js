@@ -143,7 +143,7 @@ mediaRouter.delete("/:id", async (req, res, next) => {
 });
 
 //GET media/id/reviews
-mediaRouter.get("/:id/reviews", async (req, res, next) => {
+/* mediaRouter.get("/:id/reviews", async (req, res, next) => {
   try {
     const movies = await readDB(mediaFilePath);
 
@@ -160,10 +160,10 @@ mediaRouter.get("/:id/reviews", async (req, res, next) => {
     console.log(error);
     next(error);
   }
-});
+}); */
 
 //GET media/id/reviews/id
-mediaRouter.get("/:movieId/reviews/reviewId", async (req, res, next) => {
+mediaRouter.get("/:movieId/reviews/:reviewId", async (req, res, next) => {
   try {
     const movies = await readDB(mediaFilePath);
 
@@ -172,9 +172,8 @@ mediaRouter.get("/:movieId/reviews/reviewId", async (req, res, next) => {
     );
 
     if (movieFound) {
-      const reviews = movieFound.reviews;
-      const reviewFound = reviews.find(
-        (rev) => rev._id === req.params.reviewId
+      const reviewFound = movieFound.reviews.find(
+        (review) => review._id === req.params.reviewId
       );
       if (reviewFound) {
         res.send(reviewFound);
