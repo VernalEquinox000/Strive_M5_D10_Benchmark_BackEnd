@@ -228,4 +228,36 @@ mediaRouter.post(
   }
 );
 
+mediaRouter.delete("/:movieId/reviws/:reviewId", async (req, res, next) => {
+  try {
+    const movies = await readDB(mediaFilePath);
+    const movieFound = movies.find(
+      (movie) => movie.imdbID === req.params.movieId
+    );
+    if (movieFound) {
+      const reviewFound = movieFound.reviews.find(
+        (review) => review._id === req.params.reviewId
+      );
+      if (reviewFound) {
+        const filteredReviews = movieFound.reviews.filter(
+          (review) => review._id !== req.params.reviewId
+        );
+        await writeDB(mediaFilePath, filteredMovies);
+        res.status(204).send("review Deleted!");
+      } else {
+        const error = new Error();
+        error.httpStatusCode = 404;
+        next(error);
+      }
+    } else {
+      const error = new Error();
+      error.httpStatusCode = 404;
+      next(error);
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
 module.exports = mediaRouter;
