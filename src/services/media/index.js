@@ -144,7 +144,7 @@ mediaRouter.delete("/:id", async (req, res, next) => {
 });
 
 //GET media/id/reviews
-/* mediaRouter.get("/:id/reviews", async (req, res, next) => {
+mediaRouter.get("/:id/reviews", async (req, res, next) => {
   try {
     const movies = await readDB(mediaFilePath);
 
@@ -161,7 +161,7 @@ mediaRouter.delete("/:id", async (req, res, next) => {
     console.log(error);
     next(error);
   }
-}); */
+});
 
 //GET media/id/reviews/id
 mediaRouter.get("/:movieId/reviews/:reviewId", async (req, res, next) => {
@@ -228,6 +228,31 @@ mediaRouter.post(
   }
 );
 
+mediaRouter.put("/:movieId/reviews/:reviewId", async (req, res, next) => {
+  try {
+    const movies = await readDB(mediaFilePath);
+    const foundMovie = movies.find(
+      (movie) => (movie.imdbID = req.params.movieId)
+    );
+    if (foundMovie) {
+      const filteredReviews = foundMovie.reviews.filter(
+        (review) => review._id !== req.params.reviewId
+      );
+      const modifiedReview = req.body;
+      modifiedReview._id = req.params.reviewId;
+      await writeDB(mediaFilePath, filteredReviews);
+      res.status(204).send("review updated!");
+    } else {
+      const error = new Error();
+      error.httpStatusCode = 404;
+      next(error);
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
 mediaRouter.delete("/:movieId/reviws/:reviewId", async (req, res, next) => {
   try {
     const movies = await readDB(mediaFilePath);
@@ -242,7 +267,7 @@ mediaRouter.delete("/:movieId/reviws/:reviewId", async (req, res, next) => {
         const filteredReviews = movieFound.reviews.filter(
           (review) => review._id !== req.params.reviewId
         );
-        await writeDB(mediaFilePath, filteredMovies);
+        await writeDB(mediaFilePath, filteredReviews);
         res.status(204).send("review Deleted!");
       } else {
         const error = new Error();
