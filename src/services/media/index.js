@@ -232,20 +232,26 @@ mediaRouter.put("/:movieId/reviews/:reviewId", async (req, res, next) => {
   try {
     const movies = await readDB(mediaFilePath);
     const foundMovie = movies.find(
-      (movie) => (movie.imdbID = req.params.movieId)
+      (movie) => movie.imdbID === req.params.movieId
     );
+    console.log(foundMovie);
     if (foundMovie) {
       const filteredReviews = foundMovie.reviews.filter(
         (review) => review._id !== req.params.reviewId
       );
+
       const modifiedReview = req.body;
       modifiedReview._id = req.params.reviewId;
-      await writeDB(mediaFilePath, filteredReviews);
-      res.status(204).send("review updated!");
-    } else {
-      const error = new Error();
-      error.httpStatusCode = 404;
-      next(error);
+      if (error) {
+        let err = new Error();
+        err.message = err.details[0].message;
+        err.httpStatusCode = 400;
+        next(err);
+      } else {
+        filteredReviews.push(modifiedReview);
+        await writeDB(mediaFilePath, filteredReviews);
+        res.status(200).send(modifiedReview);
+      }
     }
   } catch (error) {
     console.log(error);
