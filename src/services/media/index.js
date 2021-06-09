@@ -196,7 +196,7 @@ mediaRouter.get("/:movieId/reviews/:reviewId", async (req, res, next) => {
 
 mediaRouter.post(
   "/:movieId/reviews",
-  mediaValidation,
+  reviewsValidation,
   async (req, res, next) => {
     try {
       const validationErrors = validationResult(req);
@@ -210,15 +210,16 @@ mediaRouter.post(
         const movieFound = movies.find(
           (movie) => movie.imdbID === req.params.movieId
         );
+        console.log(movieFound);
 
-        moviesFound.reviews.push({
+        movieFound.reviews.push({
           _id: uniqid(),
           ...req.body,
           elementId: req.params.movieId,
           createdAt: new Date(),
         });
         await writeDB(mediaFilePath, movies);
-        res.status(201).send();
+        res.status(201).send("ok");
       }
     } catch (error) {
       console.log(error);
