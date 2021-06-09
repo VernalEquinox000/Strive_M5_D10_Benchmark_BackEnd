@@ -5,6 +5,7 @@ const { readDB, writeDB } = require("../../lib/utilities");
 const { check, validationResult } = require("express-validator");
 const { Router } = require("express");
 const { read } = require("fs");
+const { timeStamp } = require("console");
 const mediaFilePath = path.join(__dirname, "movies.json");
 
 const mediaRouter = express.Router();
@@ -192,5 +193,38 @@ mediaRouter.get("/:movieId/reviews/:reviewId", async (req, res, next) => {
     next(error);
   }
 });
+
+mediaRouter.post(
+  "/:movieId/reviews",
+  mediaValidation,
+  async (req, res, next) => {
+    try {
+      const validationErrors = validationResult(req);
+      if (!validationErrors.isEmpty()) {
+        const error = new Error();
+        error.httpStatusCode = 400;
+        error.message = validationErrors;
+        next(error);
+      } else {
+        const movies = await readDB(mediaFilePath);
+        const movieFound = movies.find(
+          (movie) => movie.imdbID === req.params.movieId
+        );
+
+        moviesFound.reviews.push({
+          _id: uniqid(),
+          ...req.body,
+          elementId: req.params.movieId,
+          createdAt: new Date(),
+        });
+        await writeDB(mediaFilePath, movies);
+        res.status(201).send();
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+);
 
 module.exports = mediaRouter;
