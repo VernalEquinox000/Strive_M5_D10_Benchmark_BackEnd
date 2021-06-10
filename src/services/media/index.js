@@ -51,7 +51,13 @@ mediaRouter.get("/:id", async (req, res, next) => {
       (movie) => movie.imdbID === req.params.id
     );
     if (movies.length > 0) {
-      res.send(selectedMovie);
+      const response = await fetch(
+        `http://www.omdbapi.com/?i=${req.params.id}&apikey=${process.env.API_KEY}`
+      );
+      console.log(response);
+      const movieInfo = await response.json;
+
+      res.send(movieInfo);
     } else {
       const err = new Error();
       err.httpStatusCode = 404;
@@ -96,13 +102,15 @@ mediaRouter.post("/", mediaValidation, async (req, res, next) => {
 });
 
 //PUT
-mediaRouter.put("/:id", async (req, res, next) => {
+mediaRouter.put("/:id", mediaValidation, async (req, res, next) => {
   try {
     const movies = await readDB(mediaFilePath);
     const newMovies = movies.filter((movie) => movie.imdbID !== req.params.id);
     const modifiedMovie = req.body;
     modifiedMovie.imdbID = req.params.id;
-    if (error) {
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()) {
       let error = new Error();
       error.message = error.details[0].message;
       error.httpStatusCode = 400;
