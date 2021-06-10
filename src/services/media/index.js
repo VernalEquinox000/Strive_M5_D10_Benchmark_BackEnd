@@ -103,10 +103,10 @@ mediaRouter.put("/:id", async (req, res, next) => {
     const modifiedMovie = req.body;
     modifiedMovie.imdbID = req.params.id;
     if (error) {
-      let err = new Error();
-      err.message = error.details[0].message;
-      err.httpStatusCode = 400;
-      next(err);
+      let error = new Error();
+      error.message = error.details[0].message;
+      error.httpStatusCode = 400;
+      next(error);
     } else {
       newmovies.push(modifiedMovie);
       await writeDB(mediaFilePath, newMovies);
@@ -228,36 +228,45 @@ mediaRouter.post(
   }
 );
 
-mediaRouter.put("/:movieId/reviews/:reviewId", async (req, res, next) => {
-  try {
-    const movies = await readDB(mediaFilePath);
-    const foundMovie = movies.find(
-      (movie) => movie.imdbID === req.params.movieId
-    );
-    console.log(foundMovie);
-    if (foundMovie) {
-      const filteredReviews = foundMovie.reviews.filter(
-        (review) => review._id !== req.params.reviewId
-      );
-
-      const modifiedReview = req.body;
-      modifiedReview._id = req.params.reviewId;
-      if (error) {
-        let err = new Error();
-        err.message = err.details[0].message;
-        err.httpStatusCode = 400;
-        next(err);
+mediaRouter.put(
+  "/:movieId/reviews/:reviewId",
+  reviewsValidation,
+  async (req, res, next) => {
+    try {
+      const validationErrors = validationResult(req);
+      if (!validationErrors.isEmpty()) {
+        const error = new Error();
+        error.httpStatusCode = 400;
+        error.message = validationErrors;
+        next(error);
       } else {
-        filteredReviews.push(modifiedReview);
-        await writeDB(mediaFilePath, filteredReviews);
-        res.status(200).send(modifiedReview);
+        const movies = await readDB(mediaFilePath);
+        const foundMovie = movies.find(
+          (movie) => movie.imdbID === req.params.movieId
+        );
+        console.log(foundMovie);
+        if (foundMovie) {
+          const filteredReviews = foundMovie.reviews.filter(
+            (review) => review._id !== req.params.reviewId
+          );
+
+          const modifiedReview = {
+            ...req.body,
+            _id: req.params.reviewId,
+            elementId: req.params.movieId,
+            modifiedAt: new Date(),
+          };
+          filteredReviews.push(modifiedReview);
+          await writeDB(mediaFilePath, filteredReviews);
+          res.status(200).send(modifiedReview);
+        }
       }
+    } catch (error) {
+      console.log(error);
+      next(error);
     }
-  } catch (error) {
-    console.log(error);
-    next(error);
   }
-});
+);
 
 mediaRouter.delete("/:movieId/reviws/:reviewId", async (req, res, next) => {
   try {
