@@ -108,7 +108,7 @@ mediaRouter.put("/:id", async (req, res, next) => {
       error.httpStatusCode = 400;
       next(error);
     } else {
-      newmovies.push(modifiedMovie);
+      newMovies.push(modifiedMovie);
       await writeDB(mediaFilePath, newMovies);
       res.status(200).send(modifiedMovie);
     }
@@ -244,7 +244,6 @@ mediaRouter.put(
         const foundMovie = movies.find(
           (movie) => movie.imdbID === req.params.movieId
         );
-        console.log(foundMovie);
         if (foundMovie) {
           const filteredReviews = foundMovie.reviews.filter(
             (review) => review._id !== req.params.reviewId
@@ -256,9 +255,15 @@ mediaRouter.put(
             elementId: req.params.movieId,
             modifiedAt: new Date(),
           };
+          console.log(modifiedReview);
           filteredReviews.push(modifiedReview);
-          await writeDB(mediaFilePath, filteredReviews);
-          res.status(200).send(modifiedReview);
+          const newMovies = movies.filter(
+            (movie) => movie.imdbID !== req.params.movieId
+          );
+          const newestMovies = newMovies.push({ foundMovie });
+          console.log(newestMovies);
+          await writeDB(mediaFilePath, newestMovies);
+          res.status(200).send(filteredReviews);
         }
       }
     } catch (error) {
