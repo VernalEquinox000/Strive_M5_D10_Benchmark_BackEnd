@@ -46,18 +46,22 @@ mediaRouter.get("/", async (req, res, next) => {
 //GET media/:id
 mediaRouter.get("/:id", async (req, res, next) => {
   try {
+    async function fetchMovieInfo() {
+      const response = await fetch(
+        `http://www.omdbapi.com/?i=${req.params.id}&apikey=${process.env.API_KEY}`
+      );
+      const movieInfo = await response.json();
+      console.log(movieInfo);
+      return movieInfo;
+    }
     const movies = await readDB(mediaFilePath);
     const selectedMovie = movies.filter(
       (movie) => movie.imdbID === req.params.id
     );
     if (movies.length > 0) {
-      const response = await fetch(
-        `http://www.omdbapi.com/?i=${req.params.id}&apikey=${process.env.API_KEY}`
-      );
-      console.log(response);
-      const movieInfo = await response.json;
-
-      res.send(movieInfo);
+      fetchMovieInfo();
+      res.send(selectedMovie);
+      //const movieInfo = await response.json;
     } else {
       const err = new Error();
       err.httpStatusCode = 404;
