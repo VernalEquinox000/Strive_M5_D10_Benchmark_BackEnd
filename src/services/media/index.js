@@ -257,12 +257,13 @@ mediaRouter.put(
           };
           console.log(modifiedReview);
           filteredReviews.push(modifiedReview);
-          const newMovies = movies.filter(
+          foundMovie.reviews = filteredReviews;
+          /* const newMovies = movies.filter(
             (movie) => movie.imdbID !== req.params.movieId
           );
           const newestMovies = newMovies.push({ foundMovie });
-          console.log(newestMovies);
-          await writeDB(mediaFilePath, newestMovies);
+          console.log(newestMovies); */
+          await writeDB(mediaFilePath, movies);
           res.status(200).send(filteredReviews);
         }
       }
