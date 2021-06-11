@@ -58,14 +58,13 @@ mediaRouter.get("/test/test/:movieId", async (req, res, next) => {
 });
 
 //GET media/:id
-mediaRouter.get("/:id", async (req, res, next) => {
+mediaRouter.get("/:movieId", async (req, res, next) => {
   try {
     const movies = await readDB(mediaFilePath);
     const selectedMovie = movies.filter(
-      (movie) => movie.imdbID === req.params.id
+      (movie) => movie.imdbID === req.params.movieId
     );
     if (movies.length > 0) {
-      fetchMovieInfo();
       const response = await fetchMovieInfo(
         req.params.movieId,
         process.env.API_KEY
