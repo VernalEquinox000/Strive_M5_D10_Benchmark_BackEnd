@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const uniqid = require("uniqid");
-const { readDB, writeDB } = require("../../lib/utilities");
+const { readDB, writeDB, fetchMovieInfo } = require("../../lib/utilities");
 const { check, validationResult } = require("express-validator");
 const { Router } = require("express");
 const { read } = require("fs");
@@ -43,17 +43,39 @@ mediaRouter.get("/", async (req, res, next) => {
   }
 });
 
+//________
+mediaRouter.get("/test/test/:movieId", async (req, res, next) => {
+  try {
+    const response = await fetchMovieInfo(
+      req.params.movieId,
+      process.env.API_KEY
+    );
+    const data = await response.data;
+    console.log(data);
+    setPier(data);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 //GET media/:id
 mediaRouter.get("/:id", async (req, res, next) => {
   try {
-    async function fetchMovieInfo() {
-      const response = await fetch(
-        `http://www.omdbapi.com/?i=${req.params.id}&apikey=${process.env.API_KEY}`
-      );
-      const movieInfo = await response.json();
-      console.log(movieInfo);
-      return movieInfo;
-    }
+    const response = fetch(
+      `http://www.omdbapi.com/?i=tt0120737&apikey=ade2721c`
+    );
+    console.log(response);
+    /*  getData() {
+  return fetch('http://www.omdbapi.com/?i=tt3896198&apikey=9fa6058b')
+    .then((response) => {
+      response.json()
+    });
+}
+
+this.data.getData().then((data) => {
+  this.data = data;
+});
+ */
     const movies = await readDB(mediaFilePath);
     const selectedMovie = movies.filter(
       (movie) => movie.imdbID === req.params.id
