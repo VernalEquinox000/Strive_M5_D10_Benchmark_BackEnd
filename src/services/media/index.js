@@ -51,8 +51,7 @@ mediaRouter.get("/test/test/:movieId", async (req, res, next) => {
       process.env.API_KEY
     );
     const data = await response.data;
-    console.log(data);
-    setPier(data);
+    res.send(data);
   } catch (error) {
     console.log(error);
   }
@@ -61,28 +60,19 @@ mediaRouter.get("/test/test/:movieId", async (req, res, next) => {
 //GET media/:id
 mediaRouter.get("/:id", async (req, res, next) => {
   try {
-    const response = fetch(
-      `http://www.omdbapi.com/?i=tt0120737&apikey=ade2721c`
-    );
-    console.log(response);
-    /*  getData() {
-  return fetch('http://www.omdbapi.com/?i=tt3896198&apikey=9fa6058b')
-    .then((response) => {
-      response.json()
-    });
-}
-
-this.data.getData().then((data) => {
-  this.data = data;
-});
- */
     const movies = await readDB(mediaFilePath);
     const selectedMovie = movies.filter(
       (movie) => movie.imdbID === req.params.id
     );
     if (movies.length > 0) {
       fetchMovieInfo();
-      res.send(selectedMovie);
+      const response = await fetchMovieInfo(
+        req.params.movieId,
+        process.env.API_KEY
+      );
+      const data = await response.data;
+      res.send(data);
+      //res.send(selectedMovie);
       //const movieInfo = await response.json;
     } else {
       const err = new Error();
