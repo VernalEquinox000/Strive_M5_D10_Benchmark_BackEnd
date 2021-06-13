@@ -34,6 +34,7 @@ mediaRouter.get("/", async (req, res, next) => {
           movie.Year === req.query.year ||
           movie.Type === req.query.type
       );
+      //need to add sort by avg rate
       res.send(filteredMovies);
     } else {
       res.send(movies);
