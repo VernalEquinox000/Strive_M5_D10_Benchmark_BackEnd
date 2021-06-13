@@ -24,7 +24,7 @@ const reviewsValidation = [
 mediaRouter.get("/", async (req, res, next) => {
   try {
     const movies = await readDB(mediaFilePath);
-    console.log(req.query);
+    /* console.log(req.query);
     console.log(req.query.title);
     if ((req.query && req.query.title) || req.query.year || req.query.type) {
       const filteredMovies = movies.filter(
@@ -38,7 +38,21 @@ mediaRouter.get("/", async (req, res, next) => {
       res.send(filteredMovies);
     } else {
       res.send(movies);
-    }
+    } */
+    const sortedMovies = movies.sort((a, b) => {
+      let avgA = 0;
+      let avgB = 0;
+      for (let i = 0; i < a.reviews.length; i++) {
+        avgA = (avgA + a.reviews[i].rate) / i;
+      }
+      for (let i = 0; i < b.reviews.length; i++) {
+        avgB = (avgB + b.reviews[i].rate) / i;
+      }
+      if (avgA < avgB) return -1;
+      else if (avgA > avgB) return 1;
+      else return 0;
+    });
+    res.send(sortedMovies);
   } catch (error) {
     next(error);
   }
