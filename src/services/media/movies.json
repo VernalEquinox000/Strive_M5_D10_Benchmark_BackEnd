@@ -10,14 +10,14 @@
         "_id": "123455",
         "comment": "A good movie but definitely I don't like many parts of the plot",
         "rate": 3,
-        "elementId": "5d318e1a8541744830bef139",
+        "elementId": "tt0120737",
         "createdAt": "2019-08-01T12:46:45.895Z"
       },
       {
         "_id": "123456",
         "comment": "shit movie",
         "rate": 1,
-        "elementId": "5d318e1a8541744830bef139",
+        "elementId": "tt0120737",
         "createdAt": "2019-08-01T12:46:45.895Z"
       },
       {
@@ -34,7 +34,30 @@
     "Year": "2003",
     "imdbID": "tt0167260",
     "Type": "movie",
-    "Poster": "https://m.media-amazon.com/images/M/MV5BNzA5ZDNlZWMtM2NhNS00NDJjLTk4NDItYTRmY2EwMWZlMTY3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg"
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNzA5ZDNlZWMtM2NhNS00NDJjLTk4NDItYTRmY2EwMWZlMTY3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg",
+    "reviews": [
+      {
+        "_id": "123457",
+        "comment": "A good movie but definitely I don't like many parts of the plot",
+        "rate": 5,
+        "elementId": "tt0167260",
+        "createdAt": "2019-08-01T12:46:45.895Z"
+      },
+      {
+        "_id": "123458",
+        "comment": "shit movie",
+        "rate": 1,
+        "elementId": "tt0167260",
+        "createdAt": "2019-08-01T12:46:45.895Z"
+      },
+      {
+        "comment": "Meh",
+        "rate": 4,
+        "_id": "jlh67ats6ed",
+        "elementId": "tt0167260",
+        "modifiedAt": "2021-06-10T20:46:46.325Z"
+      }
+    ]
   },
   {
     "Title": "The Lord of the Rings: The Two Towers",
