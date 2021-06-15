@@ -40,65 +40,24 @@ mediaRouter.get("/", async (req, res, next) => {
       res.send(movies);
     } */
 
-    /* const avg = 
-    const sortedMovies = movies.sort((a, b) => {
-      let avgA = 0;
-      let avgB = 0;
-      for (let i = 0; i < a.reviews.length; i++) {
-        avgA = (avgA + a.reviews[i].rate) / i;
-      }
-      for (let i = 0; i < b.reviews.length; i++) {
-        avgB = (avgB + b.reviews[i].rate) / i;
-      }
-      if (avgA < avgB) return -1;
-      else if (avgA > avgB) return 1;
-      else return 0;
-    });
-    res.send(sortedMovies); */
-
     /* for (let i = 0; i < movies.length; i++) {
+      let counter = 0;
+      let avg = [];
       for (let j = 0; j < movies[i].reviews.length; j++) {
         counter += movies[i].reviews[j].rate;
         avg[i] = counter / (j + 1);
-        console.log(movies[i].reviews[j].rate);
-        console.log(counter);
-        console.log(avg[i]);
       }
-      console.log(avg);
-      res.send(avg);
+      movies[i].reviews.average = avg[i];
     } */
-    movies.forEach((movie) => {
-      let counter = 0;
-      let avg = [];
-      for (let i = 0; i < movie.reviews.length; i++) {
-        counter += movie.reviews[i].rate;
-        avg = counter / (i + 1);
-        console.log(counter);
-        console.log(avg);
-      }
-      /* const sortedMovies = movies.sort((a, b) => {
-        if (a.avg < b.avg) return -1;
-        else if (a.avg > b.avg) return 1;
-        else return 0;
-      });
-      console.log(sortedMovies); */
+    const sortedMovies = movies.sort((a, b) => {
+      if (a.year < b.year) return -1;
+      else if (a.year > b.year) return 1;
+      else return 0;
     });
+    console.log(sortedMovies);
+    res.send(sortedMovies);
   } catch (error) {
     next(error);
-  }
-});
-
-//________
-mediaRouter.get("/test/test/:movieId", async (req, res, next) => {
-  try {
-    const response = await fetchMovieInfo(
-      req.params.movieId,
-      process.env.API_KEY
-    );
-    const data = await response.data;
-    res.send(data);
-  } catch (error) {
-    console.log(error);
   }
 });
 
