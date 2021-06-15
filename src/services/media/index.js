@@ -34,28 +34,30 @@ mediaRouter.get("/", async (req, res, next) => {
           movie.Year === req.query.year ||
           movie.Type === req.query.type
       );
-      //need to add sort by avg rate
       res.send(filteredMovies);
     } else {
       res.send(movies);
     } */
-
-    /* for (let i = 0; i < movies.length; i++) {
+    let avg = [];
+    for (let i = 0; i < movies.length; i++) {
       let counter = 0;
-      let avg = [];
+
       for (let j = 0; j < movies[i].reviews.length; j++) {
         counter += movies[i].reviews[j].rate;
         avg[i] = counter / (j + 1);
       }
       movies[i].reviews.average = avg[i];
-    } */
-    const sortedMovies = movies.sort((a, b) => {
-      if (a.year < b.year) return -1;
-      else if (a.year > b.year) return 1;
+      console.log(movies[i].reviews.average);
+    }
+    console.log(movies);
+
+    /* const sortedMovies = movies.sort((a, b) => {
+      if (a.Year < b.Year) return -1;
+      else if (a.Year > b.Year) return 1;
       else return 0;
     });
     console.log(sortedMovies);
-    res.send(sortedMovies);
+    res.send(sortedMovies); */
   } catch (error) {
     next(error);
   }
