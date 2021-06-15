@@ -64,7 +64,30 @@
     "Year": "2002",
     "imdbID": "tt0167261",
     "Type": "movie",
-    "Poster": "https://m.media-amazon.com/images/M/MV5BNGE5MzIyNTAtNWFlMC00NDA2LWJiMjItMjc4Yjg1OWM5NzhhXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg"
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNGE5MzIyNTAtNWFlMC00NDA2LWJiMjItMjc4Yjg1OWM5NzhhXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg",
+    "reviews": [
+      {
+        "_id": "123459",
+        "comment": "terrible",
+        "rate": 1,
+        "elementId": "tt0167261",
+        "createdAt": "2019-08-01T12:46:45.895Z"
+      },
+      {
+        "_id": "123460",
+        "comment": "shit movie",
+        "rate": 1,
+        "elementId": "tt0167261",
+        "createdAt": "2019-08-01T12:46:45.895Z"
+      },
+      {
+        "comment": "Meh",
+        "rate": 1,
+        "_id": "jlh67afddsfsdd",
+        "elementId": "tt0167261",
+        "modifiedAt": "2021-06-10T20:46:46.325Z"
+      }
+    ]
   },
   {
     "Title": "Lord of War",

@@ -55,18 +55,33 @@ mediaRouter.get("/", async (req, res, next) => {
       else return 0;
     });
     res.send(sortedMovies); */
-    let avg = [];
-    let counter = 0;
-    movies.forEach((movie) => {
-      for (let j = 0; j < movie.reviews.length; j++) {
-        counter += movie.reviews[j].rate;
+
+    /* for (let i = 0; i < movies.length; i++) {
+      for (let j = 0; j < movies[i].reviews.length; j++) {
+        counter += movies[i].reviews[j].rate;
         avg[i] = counter / (j + 1);
-        console.log(movie.reviews[j].rate);
+        console.log(movies[i].reviews[j].rate);
         console.log(counter);
         console.log(avg[i]);
       }
       console.log(avg);
       res.send(avg);
+    } */
+    movies.forEach((movie) => {
+      let counter = 0;
+      let avg = [];
+      for (let i = 0; i < movie.reviews.length; i++) {
+        counter += movie.reviews[i].rate;
+        avg = counter / (i + 1);
+        console.log(counter);
+        console.log(avg);
+      }
+      /* const sortedMovies = movies.sort((a, b) => {
+        if (a.avg < b.avg) return -1;
+        else if (a.avg > b.avg) return 1;
+        else return 0;
+      });
+      console.log(sortedMovies); */
     });
   } catch (error) {
     next(error);
