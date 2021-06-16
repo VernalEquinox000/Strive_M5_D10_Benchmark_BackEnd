@@ -29,8 +29,20 @@ const fetchMovieInfo = async (id, key) => {
   }
 };
 
+const fetchMovieSearch = async (title, key) => {
+  try {
+    const response = await axios.get(
+      `http://www.omdbapi.com/?t=${title}&apikey=${key}`
+    );
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   readDB,
   writeDB,
   fetchMovieInfo,
+  fetchMovieSearch,
 };

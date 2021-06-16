@@ -1,7 +1,12 @@
 const express = require("express");
 const path = require("path");
 const uniqid = require("uniqid");
-const { readDB, writeDB, fetchMovieInfo } = require("../../lib/utilities");
+const {
+  readDB,
+  writeDB,
+  fetchMovieInfo,
+  fetchMovieSearch,
+} = require("../../lib/utilities");
 const { check, validationResult } = require("express-validator");
 const { Router } = require("express");
 const { read } = require("fs");
@@ -51,16 +56,34 @@ mediaRouter.get("/", async (req, res, next) => {
     }
     console.log(movies);
 
-    /* const sortedMovies = movies.sort((a, b) => {
+    const sortedMovies = movies.sort((a, b) => {
       if (a.Year < b.Year) return -1;
       else if (a.Year > b.Year) return 1;
       else return 0;
     });
     console.log(sortedMovies);
-    res.send(sortedMovies); */
+    res.send(sortedMovies);
   } catch (error) {
     next(error);
   }
+});
+
+//GET media/search
+mediaRouter.get("/search", async (req, res, next) => {
+  try {
+    console.log(req.query);
+    console.log(req.query.title);
+    if (req.query && req.query.title) {
+      const response = await fetchMovieSearch(
+        req.query.title,
+        process.env.API_KEY
+      );
+      //console.log(response);
+      const data = await response.data;
+      console.log(data);
+      res.send(data);
+    } else res.send("please add a title to search");
+  } catch (error) {}
 });
 
 //GET media/:id
