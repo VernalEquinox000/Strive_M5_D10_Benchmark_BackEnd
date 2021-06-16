@@ -43,22 +43,24 @@ mediaRouter.get("/", async (req, res, next) => {
     } else {
       res.send(movies);
     } */
-    let avg = [];
+
     for (let i = 0; i < movies.length; i++) {
+      let avg = [];
       let counter = 0;
 
-      for (let j = 0; j < movies[i].reviews.length; j++) {
+      for (let j = 0; j < movies[i]?.reviews?.length; j++) {
         counter += movies[i].reviews[j].rate;
         avg[i] = counter / (j + 1);
       }
-      movies[i].reviews.average = avg[i];
-      console.log(movies[i].reviews.average);
+      movies[i].average = avg[i];
+      console.log(movies[i].average);
+      console.log("puppa");
     }
-    console.log(movies);
 
-    const sortedMovies = movies.sort((a, b) => {
-      if (a.Year < b.Year) return -1;
-      else if (a.Year > b.Year) return 1;
+    let sortedMovies = movies.sort((a, b) => {
+      console.log(a, b);
+      if (a.average < b.average) return -1;
+      else if (a.average > b.average) return 1;
       else return 0;
     });
     console.log(sortedMovies);
@@ -71,8 +73,6 @@ mediaRouter.get("/", async (req, res, next) => {
 //GET media/search
 mediaRouter.get("/search", async (req, res, next) => {
   try {
-    console.log(req.query);
-    console.log(req.query.title);
     if (req.query && req.query.title) {
       const response = await fetchMovieSearch(
         req.query.title,
