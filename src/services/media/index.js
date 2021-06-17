@@ -12,7 +12,9 @@ const { Router } = require("express");
 const { read } = require("fs");
 const { timeStamp } = require("console");
 const mediaFilePath = path.join(__dirname, "movies.json");
-
+const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../../cloudinary");
 const mediaRouter = express.Router();
 
 const mediaValidation = [

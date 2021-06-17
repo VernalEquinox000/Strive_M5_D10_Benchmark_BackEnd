@@ -36,7 +36,7 @@
     √[EXTRA] GET /media/:id should fetch the information from omdbapi for that specific media
     [EXTRA] GET /media/catalogue?title=whatever should return a PDF containing all the movies containing the given word in the title
     [EXTRA] GET /media?title=book => should return media with title containing "book" (must be possible to filter also for year and type)
-    X still need fix [EXTRA] GET /media should return the movies sorted by the Avg Rate value
+    √[EXTRA] GET /media should return the movies sorted by the Avg Rate value
     [EXTRA] POST /media/sendCatalogue should send and email with the catalogue that match the title to the given address in the req.body: 
             { title=whatever,email=my@email.com}
     √[EXTRA] GET /media/search ⇒ given a title in the query search in omdb catalogue by title
