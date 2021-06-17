@@ -17,6 +17,15 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../../cloudinary");
 const mediaRouter = express.Router();
 
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "netflix",
+  },
+});
+
+const cloudinaryMulter = multer({ storage: storage });
+
 const mediaValidation = [
   check("Title").exists().withMessage("Title is required!"),
   check("imdbID").exists().withMessage("id is required!"),
@@ -147,6 +156,28 @@ mediaRouter.post("/", mediaValidation, async (req, res, next) => {
     next(error);
   }
 });
+
+//POST image
+mediaRouter.post(
+  "/image",
+  cloudinaryMulter.single("Poster"),
+  async (req, res, next) => {
+    try {
+      const movies = await readDB(mediaFilePath);
+
+      users.push({
+        ...req.body,
+        Poster: req.file.path,
+      });
+
+      await writeDB(mediaFilePath, movies);
+      res.send(movies);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+);
 
 //PUT
 mediaRouter.put("/:id", mediaValidation, async (req, res, next) => {
