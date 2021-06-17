@@ -49,6 +49,7 @@ mediaRouter.get("/", async (req, res, next) => {
       let counter = 0;
 
       for (let j = 0; j < movies[i]?.reviews?.length; j++) {
+        //it works now with conditional chaining
         counter += movies[i].reviews[j].rate;
         avg[i] = counter / (j + 1);
       }
