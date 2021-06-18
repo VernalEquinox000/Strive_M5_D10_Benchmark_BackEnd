@@ -45,15 +45,19 @@ mediaRouter.get("/", async (req, res, next) => {
     //console.log(req.query);
     //console.log(req.query.title);
     if (req.query && req.query.title) {
-      /* || req.query.year || req.query.type) */ const filteredMovies =
-        movies.filter(
-          (movie) =>
-            movie.Title.toLowerCase().includes(
-              req.query.title.toLowerCase()
-            ) /* ||
-          movie.Year === req.query.year ||
-          movie.Type === req.query.type */
-        );
+      const filteredMovies = movies.filter((movie) =>
+        movie.Title.toLowerCase().includes(req.query.title.toLowerCase())
+      );
+      res.send(filteredMovies);
+    } else if (req.query && req.query.year) {
+      const filteredMovies = movies.filter(
+        (movie) => movie.Year === req.query.year
+      );
+      res.send(filteredMovies);
+    } else if (req.query && req.query.type) {
+      const filteredMovies = movies.filter((movie) =>
+        movie.TypetoLowerCase().includes(req.query.type.toLowerCase())
+      );
       res.send(filteredMovies);
     } else {
       res.send(movies);
