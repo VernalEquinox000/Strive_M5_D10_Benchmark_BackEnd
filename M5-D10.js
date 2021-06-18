@@ -31,7 +31,7 @@
 
     √ CRUD for Media ( /media GET, POST, DELETE, PUT)
     √ CRUD for Reviews ( /reviews GET, POST, DELETE, PUT) (alternatively you could decide to embed reviews in medias...)
-    Handle media's image upload (POST /media/{id}/upload)
+    √Handle media's image upload (POST /media/{id}/upload)
     √ Get all the reviews of a specific media (GET /media/{id}/reviews)
     √[EXTRA] GET /media/:id should fetch the information from omdbapi for that specific media
     [EXTRA] GET /media/catalogue?title=whatever should return a PDF containing all the movies containing the given word in the title

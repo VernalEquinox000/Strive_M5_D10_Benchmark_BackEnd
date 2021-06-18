@@ -42,20 +42,22 @@ const reviewsValidation = [
 mediaRouter.get("/", async (req, res, next) => {
   try {
     const movies = await readDB(mediaFilePath);
-    /* console.log(req.query);
-    console.log(req.query.title);
-    if ((req.query && req.query.title) || req.query.year || req.query.type) {
-      const filteredMovies = movies.filter(
-        (movie) =>
-          (movie.hasOwnProperty("Title") &&
-            movie.Title.toLowerCase() === req.query.title.toLowerCase()) ||
+    //console.log(req.query);
+    //console.log(req.query.title);
+    if (req.query && req.query.title) {
+      /* || req.query.year || req.query.type) */ const filteredMovies =
+        movies.filter(
+          (movie) =>
+            movie.Title.toLowerCase().includes(
+              req.query.title.toLowerCase()
+            ) /* ||
           movie.Year === req.query.year ||
-          movie.Type === req.query.type
-      );
+          movie.Type === req.query.type */
+        );
       res.send(filteredMovies);
     } else {
       res.send(movies);
-    } */
+    }
 
     for (let i = 0; i < movies.length; i++) {
       let avg = [];
@@ -68,7 +70,6 @@ mediaRouter.get("/", async (req, res, next) => {
       }
       movies[i].average = avg[i];
       console.log(movies[i].average);
-      console.log("puppa");
     }
 
     let sortedMovies = movies.sort((a, b) => {
@@ -77,7 +78,7 @@ mediaRouter.get("/", async (req, res, next) => {
       else if (a.average > b.average) return 1;
       else return 0;
     });
-    console.log(sortedMovies);
+    //console.log(sortedMovies);
     res.send(sortedMovies);
   } catch (error) {
     next(error);
