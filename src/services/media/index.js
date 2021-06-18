@@ -7,7 +7,7 @@ const {
   fetchMovieInfo,
   fetchMovieSearch,
 } = require("../../lib/utilities");
-const { check, validationResult } = require("express-validator");
+const { check, body, validationResult } = require("express-validator");
 const { Router } = require("express");
 const { read } = require("fs");
 const { timeStamp } = require("console");
@@ -35,6 +35,8 @@ const reviewsValidation = [
   check("rate").exists().withMessage("Rate is required!"),
   check("comment").exists().withMessage("Comment is required!"),
 ];
+
+//const imageValidation = [body("Poster").isURL()];
 
 //GET media
 mediaRouter.get("/", async (req, res, next) => {
@@ -106,14 +108,13 @@ mediaRouter.get("/:movieId", async (req, res, next) => {
       (movie) => movie.imdbID === req.params.movieId
     );
     if (movies.length > 0) {
-      const response = await fetchMovieInfo(
+      /* const response = await fetchMovieInfo(
         req.params.movieId,
         process.env.API_KEY
       );
       const data = await response.data;
-      res.send(data);
-      //res.send(selectedMovie);
-      //const movieInfo = await response.json;
+      res.send(data); */
+      res.send(selectedMovie);
     } else {
       const err = new Error();
       err.httpStatusCode = 404;
@@ -159,19 +160,28 @@ mediaRouter.post("/", mediaValidation, async (req, res, next) => {
 
 //POST image
 mediaRouter.post(
-  "/image",
+  "/:movieId/image",
   cloudinaryMulter.single("Poster"),
+  //imageValidation,
   async (req, res, next) => {
     try {
+      /* const validationErrors = validationResult(req);
+      if (!validationErrors.isEmpty()) {
+        const error = new Error();
+        error.httpStatusCode = 400;
+        error.message = validationErrors;
+        next(error);
+      } else { */
       const movies = await readDB(mediaFilePath);
+      const selectedMovie = movies.find(
+        (movie) => movie.imdbID === req.params.movieId
+      );
 
-      users.push({
-        ...req.body,
-        Poster: req.file.path,
-      });
+      selectedMovie.Poster = req.file.path;
 
       await writeDB(mediaFilePath, movies);
-      res.send(movies);
+      res.send(selectedMovie);
+      //}
     } catch (error) {
       console.log(error);
       next(error);
