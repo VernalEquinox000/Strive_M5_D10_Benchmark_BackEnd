@@ -44,12 +44,20 @@ mediaRouter.get("/", async (req, res, next) => {
     const movies = await readDB(mediaFilePath);
     //console.log(req.query);
     //console.log(req.query.title);
-    if (req.query && req.query.title) {
-      const filteredMovies = movies.filter((movie) =>
-        movie.Title.toLowerCase().includes(req.query.title.toLowerCase())
-      );
+    if (
+      req.query
+      //&& req.query.title
+    ) {
+      const filteredMovies = movies
+        .filter((movie) =>
+          movie.Title.toLowerCase().includes(req.query.title.toLowerCase())
+        )
+        .filter((movieTwo) => movieTwo.Year === req.query.year)
+        .filter((movieThree) =>
+          movieThree.TypetoLowerCase().includes(req.query.type.toLowerCase())
+        );
       res.send(filteredMovies);
-    } else if (req.query && req.query.year) {
+      /* } else if (req.query && req.query.year) {
       const filteredMovies = movies.filter(
         (movie) => movie.Year === req.query.year
       );
@@ -58,7 +66,7 @@ mediaRouter.get("/", async (req, res, next) => {
       const filteredMovies = movies.filter((movie) =>
         movie.TypetoLowerCase().includes(req.query.type.toLowerCase())
       );
-      res.send(filteredMovies);
+      res.send(filteredMovies); */
     } else {
       res.send(movies);
     }
