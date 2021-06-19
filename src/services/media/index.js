@@ -15,6 +15,8 @@ const mediaFilePath = path.join(__dirname, "movies.json");
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("../../cloudinary");
+const { pipeline } = require("stream");
+const { generatePDFStream } = require("../../lib/pdf");
 const mediaRouter = express.Router();
 
 const storage = new CloudinaryStorage({
@@ -93,6 +95,25 @@ mediaRouter.get("/", async (req, res, next) => {
     //console.log(sortedMovies);
     res.send(sortedMovies);
   } catch (error) {
+    next(error);
+  }
+});
+
+//GET /media/catalogue?title=whatever
+mediaRouter.get("/catalogue", async (req, res, next) => {
+  try {
+    /* const movies = await readDB(mediaFilePath);
+    const filteredMovies = movies.filter((movie) =>
+      movie.Title.toLowerCase().includes(req.query.title.toLowerCase())
+    );
+    res.send(filteredMovies); */
+
+    const source = generatePDFStream();
+    const destination = res;
+    res.setHeader("Content-Disposition", "attachment; filename=export.pdf");
+    pipeline(source, destination, (err) => next(err));
+  } catch (error) {
+    console.log(error);
     next(error);
   }
 });
